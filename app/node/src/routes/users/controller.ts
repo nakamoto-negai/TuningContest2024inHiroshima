@@ -143,6 +143,16 @@ usersRouter.get(
         console.log("no user found");
         return;
       }
+      
+      // 重複ユーザーを削除
+      let uniqueUsers: SearchedUser[] = [];
+      duplicateUsers.forEach((user) => {
+        if (
+          !uniqueUsers.some((uniqueUser) => uniqueUser.userId === user.userId)
+        ) {
+          uniqueUsers = uniqueUsers.concat(user);
+        }
+      });
 
       // 入社日・よみがなの昇順でソート
       duplicateUsers.sort((a, b) => {
@@ -153,15 +163,7 @@ usersRouter.get(
         return 0;
       });
 
-      // 重複ユーザーを削除
-      let uniqueUsers: SearchedUser[] = [];
-      duplicateUsers.forEach((user) => {
-        if (
-          !uniqueUsers.some((uniqueUser) => uniqueUser.userId === user.userId)
-        ) {
-          uniqueUsers = uniqueUsers.concat(user);
-        }
-      });
+      
 
       // User型に変換
       const users: User[] = uniqueUsers
